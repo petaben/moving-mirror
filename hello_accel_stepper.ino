@@ -11,9 +11,9 @@ void setup()
   pinMode(EN, OUTPUT);
   digitalWrite(EN, LOW);
 
-  stepper.setMaxSpeed(1000); // steps/sec
-  stepper.setAcceleration(500); // steps/sec^2 - Amount of steps the speed is adjusted every sec
-  stepper.moveTo(3200);
+  stepper.setMaxSpeed(3000); // steps/sec
+  stepper.setAcceleration(1000); // steps/sec^2 - Amount of steps the speed is adjusted every sec
+  stepper.moveTo(6400);
 }
 
 void loop()
