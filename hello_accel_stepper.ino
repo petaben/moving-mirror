@@ -7,6 +7,8 @@
 #define FORWARD     10 // limit X
 #define BACKWARD     9 // limit Y
 
+#define LIMIT_PIN     11 // limit Z
+
 #define SPEED_PIN    A0
 
 char status = 'S'; // S:Stopped, F:Forward, B:Backward
@@ -21,12 +23,28 @@ void setup()
   pinMode(BACKWARD, INPUT_PULLUP);
 
   pinMode(SPEED_PIN, INPUT);
+  pinMode(LIMIT_PIN, INPUT_PULLUP);
 
   pinMode(EN, OUTPUT);
   digitalWrite(EN, LOW);
 
-  readSpeed();
   stepper.setAcceleration(1500); // steps/sec^2 - Amount of steps the speed is adjusted every sec
+  home();
+
+  readSpeed();
+}
+
+void home(){
+  Serial.println("Start homing");
+  stepper.setMaxSpeed(200);
+  stepper.moveTo(-10000);
+  bool limitReached = !digitalRead(LIMIT_PIN);
+  while(!limitReached){
+    stepper.run();
+    limitReached = !digitalRead(LIMIT_PIN);
+  }
+  stepper.setCurrentPosition(0);
+  Serial.println("Homing complete");
 }
 
 void readSpeed(){
@@ -58,7 +76,7 @@ void stopped(){
       status = 'F';
   }
   if(isPressed(BACKWARD)){
-      stepper.moveTo(-10000);
+      stepper.moveTo(0);
       status = 'B';
   }
   stepper.run();
