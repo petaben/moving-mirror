@@ -11,6 +11,8 @@
 
 #define SPEED_PIN    A0
 
+#define FRONT_POSITION  2150 //steps
+
 char status = 'S'; // S:Stopped, F:Forward, B:Backward
 
 AccelStepper stepper(AccelStepper::DRIVER, X_STP, X_DIR);
@@ -72,7 +74,7 @@ void loop()
 
 void stopped(){
   if(isPressed(FORWARD)){
-      stepper.moveTo(10000);
+      stepper.moveTo(FRONT_POSITION);
       status = 'F';
   }
   if(isPressed(BACKWARD)){
