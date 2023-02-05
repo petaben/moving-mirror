@@ -4,11 +4,10 @@
 #define X_DIR     5
 #define X_STP     2
 
-#define FORWARD     9 // limit X
-#define BACKWARD     10 // limit Y
+#define FORWARD     10 // limit X
+#define BACKWARD     9 // limit Y
 
-#define MAX_SPEED 2//rotations/s
-#define ROTATION_STEPS 3200 // 400*8
+#define SPEED_PIN    A0
 
 char status = 'S'; // S:Stopped, F:Forward, B:Backward
 
@@ -16,14 +15,26 @@ AccelStepper stepper(AccelStepper::DRIVER, X_STP, X_DIR);
 
 void setup()
 {
+  Serial.begin(115200);
+   
   pinMode(FORWARD, INPUT_PULLUP);
   pinMode(BACKWARD, INPUT_PULLUP);
+
+  pinMode(SPEED_PIN, INPUT);
 
   pinMode(EN, OUTPUT);
   digitalWrite(EN, LOW);
 
-  stepper.setMaxSpeed(5000); // steps/sec
-  stepper.setAcceleration(4000); // steps/sec^2 - Amount of steps the speed is adjusted every sec
+  readSpeed();
+  stepper.setAcceleration(1500); // steps/sec^2 - Amount of steps the speed is adjusted every sec
+}
+
+void readSpeed(){
+  int raw_speed = analogRead(SPEED_PIN);
+  int speed = map(raw_speed, 0, 1024, 1000, 200);
+  stepper.setMaxSpeed(speed); // steps/sec
+  Serial.print("Speed: ");
+  Serial.println(speed);
 }
 
 void loop()
@@ -47,7 +58,7 @@ void stopped(){
       status = 'F';
   }
   if(isPressed(BACKWARD)){
-      stepper.moveTo(0);
+      stepper.moveTo(-10000);
       status = 'B';
   }
   stepper.run();
