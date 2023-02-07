@@ -1,8 +1,8 @@
 #include <AccelStepper.h>
 
 #define EN        8
-#define X_DIR     5
-#define X_STP     2
+#define DIR_PIN     5
+#define STP_PIN     2
 
 #define FORWARD     10 // limit X
 #define BACKWARD     9 // limit Y
@@ -19,7 +19,7 @@ char status = 'S'; // S:Stopped, F:Forward, B:Backward
 int speed;
 int distance;
 
-AccelStepper stepper(AccelStepper::DRIVER, X_STP, X_DIR);
+AccelStepper stepper(AccelStepper::DRIVER, STP_PIN, DIR_PIN);
 
 void setup()
 {
