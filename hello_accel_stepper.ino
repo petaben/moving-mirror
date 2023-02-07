@@ -17,6 +17,7 @@
 
 char status = 'S'; // S:Stopped, F:Forward, B:Backward
 int speed;
+int distance;
 
 AccelStepper stepper(AccelStepper::DRIVER, X_STP, X_DIR);
 
@@ -64,7 +65,8 @@ void readSpeed(){
 void loop()
 {
   if(digitalRead(MODE_PIN)){
-    autoMode();
+    distanceMode();
+    //autoMode();
   }else{
     manualMode();
   }
@@ -81,6 +83,27 @@ void autoMode(){
     stepper.moveTo(0);
     while(stepper.currentPosition() != 0){
       stepper.run();
+    }
+  }
+}
+
+void distanceMode(){
+  Serial.println("Distance mode");
+  while(true){
+    handleDistance();
+    stepper.run();
+  }
+}
+
+void handleDistance(){
+  if (Serial.available() > 0) {
+    distance = Serial.read();
+    Serial.print("Received distance: ");
+    Serial.println(distance);
+    int targetPosition = map(distance, 0, 255, FRONT_POSITION, 0);
+    int delta = abs(targetPosition-stepper.currentPosition());
+    if(delta > 50){
+      stepper.moveTo(targetPosition);
     }
   }
 }
