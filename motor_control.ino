@@ -69,8 +69,11 @@ void readSpeed(){
 void loop()
 {
   if(digitalRead(MODE_PIN)){
-    distanceMode();
-    //autoMode();
+    if(isPressed(FORWARD) || isPressed(BACKWARD)){
+      autoMode();
+    }else{
+      distanceMode();
+    }
   }else{
     manualMode();
   }
