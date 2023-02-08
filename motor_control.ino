@@ -107,7 +107,7 @@ void handleDistance(){
     distance = Serial.read();
     Serial.print("Received distance: ");
     Serial.println(distance);
-    int targetPosition = map(distance, 0, 255, FRONT_POSITION, 0);
+    int targetPosition = map(distance, 0, 255, 0, FRONT_POSITION);
     int delta = abs(targetPosition-stepper.currentPosition());
     if(delta > 50){
       stepper.moveTo(targetPosition);
