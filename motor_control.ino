@@ -50,6 +50,10 @@ void home(){
     stepper.run();
     limitReached = !digitalRead(LIMIT_PIN);
   }
+  for(int i=0;i<500;i++){ // just go a bit further to make sure all corners get to the back
+    stepper.run();
+    delay(1);
+  }
   stepper.setCurrentPosition(0);
   Serial.println("Homing complete");
 }
