@@ -35,7 +35,7 @@ void setup()
   pinMode(EN, OUTPUT);
   digitalWrite(EN, LOW);
 
-  stepper.setAcceleration(1000); // steps/sec^2 - Amount of steps the speed is adjusted every sec
+  stepper.setAcceleration(700); // steps/sec^2 - Amount of steps the speed is adjusted every sec
   home();
 
   readSpeed();
@@ -107,7 +107,10 @@ void handleDistance(){
     distance = Serial.read();
     Serial.print("Received distance: ");
     Serial.println(distance);
-    int targetPosition = map(distance, 0, 255, 0, FRONT_POSITION);
+    if(distance < 35){
+      distance = 35;
+    }
+    int targetPosition = map(distance, 35, 255, 0, FRONT_POSITION);
     int delta = abs(targetPosition-stepper.currentPosition());
     if(delta > 50){
       stepper.moveTo(targetPosition);
